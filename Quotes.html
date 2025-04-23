@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="description" content="Quotes are the advice from someone who has already lived and solved the same problem you are living"/>
+    <title>Read It - Quotes</title>
+    <link rel="icon" href="Icons/qq .ico" type="image/x-icon">
+    <link rel="stylesheet" href="Quotes.css"/>
+    <style>
+
+    </style>
+
+</head>
+<body>
+<div class="quote-box">
+
+<h2>Quote of the day</h2>
+<blockquote id="quote">Loading...</blockquote>
+<span id="author">Loading...</span>
+<div >
+    <button onclick="getquote(api_url);">New Quote</button>
+    <button onclick="tweet()"><img src="Icons/twitter.png" alt="">Tweet</button>
+    <button onclick="copyQuote()">Copy Quote</button>
+   <a href="saver.html" target="_blank" class="write">
+    <button onclick="wirte()">Write And Save Quote</button>
+   </a>
+    
+   
+    
+</div>
+
+</div>
+
+<script>
+    const quote = document.getElementById("quote");
+    const author = document.getElementById("author");
+    const api_url = "https://api.quotable.io/random";
+
+    async function getquote(url) {
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log(data);
+        quote.innerHTML = `"${data.content}"`;
+        author.innerHTML = `— ${data.author}`;
+    }
+
+    getquote(api_url);
+
+    function tweet() {
+        const tweetText = quote.innerText + " " + author.innerText;
+        window.open(
+            "https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweetText),
+            "Tweet Window",
+            "width=600,height=300"
+        );
+    }
+
+    function copyQuote() {
+        const quoteText = quote.innerText || quote.textContent;
+        const authorText = author.innerText || author.textContent;
+
+        const quoteWithAuthor = quoteText + " " + authorText;
+
+        navigator.clipboard.writeText(quoteWithAuthor)
+            .then(function () {
+                alert("The quote by " + authorText + " has been copied!");
+            })
+            .catch(function (error) {
+                console.error('Failed to copy quote: ', error);
+            });
+    }
+</script>
+
+ 
+  
+
+</body>
+</html>

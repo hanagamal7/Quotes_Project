@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Save Quotes</title>
+    <link rel="icon" href="Icons/qq .ico" type="image/x-icon">
+    <style>
+        body {
+            background-color:#ccbcab;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .quote-item {
+            margin-bottom: 10px;
+            background-color: rgba(222,214,186,0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .quote-text {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        button {
+            font-family: 'Playfair Display', serif;
+            background: rgb(54, 170, 220);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            border: 1px solid rgb(54, 170, 220);
+        }
+
+        .delete-button {
+            font-family: 'Playfair Display', serif;
+            background-color: rgb(240, 235, 235);
+            color: black;
+            margin-left: 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            border: 1px solid gray;
+        }
+    </style>
+    <script>
+        // Function to save the quote to local storage
+        function saveQuote() {
+            var quoteInput = document.getElementById("quoteInput");
+            var quote = quoteInput.value;
+
+            if (quote.trim() !== "") {
+                var quotes = localStorage.getItem("quotes");
+                quotes = quotes ? JSON.parse(quotes) : [];
+                quotes.push(quote);
+                localStorage.setItem("quotes", JSON.stringify(quotes));
+                quoteInput.value = "";
+                displayQuotes();
+                alert("Quote saved successfully!");
+            } else {
+                alert("Please enter a quote!");
+            }
+        }
+
+        // Function to delete a quote from local storage
+        function deleteQuote(index) {
+            var quotes = localStorage.getItem("quotes");
+            quotes = quotes ? JSON.parse(quotes) : [];
+
+            if (index >= 0 && index < quotes.length) {
+                quotes.splice(index, 1);
+                localStorage.setItem("quotes", JSON.stringify(quotes));
+                displayQuotes();
+                alert("Quote deleted successfully!");
+            }
+        }
+
+        // Function to display the saved quotes
+        function displayQuotes() {
+            var quotes = localStorage.getItem("quotes");
+            quotes = quotes ? JSON.parse(quotes) : [];
+
+            var quoteList = document.getElementById("quoteList");
+            quoteList.innerHTML = "";
+
+            quotes.forEach(function (quote, index) {
+                var li = document.createElement("li");
+                li.className = "quote-item";
+
+                var quoteText = document.createElement("span");
+                quoteText.className = "quote-text";
+                quoteText.textContent = quote;
+
+                var deleteButton = document.createElement("button");
+                deleteButton.className = "delete-button";
+                deleteButton.textContent = "Delete";
+                deleteButton.onclick = function () {
+                    deleteQuote(index);
+                };
+
+                li.appendChild(quoteText);
+                li.appendChild(deleteButton);
+                quoteList.appendChild(li);
+            });
+        }
+
+        function deleteQuote(index) {
+            // Prompt the user for confirmation
+            var confirmDelete = confirm("Are you sure you want to delete this quote?");
+
+            if (confirmDelete) {
+                // Proceed with the deletion
+                var quotes = localStorage.getItem("quotes");
+                quotes = quotes ? JSON.parse(quotes) : [];
+
+                if (index >= 0 && index < quotes.length) {
+                    quotes.splice(index, 1);
+                    localStorage.setItem("quotes", JSON.stringify(quotes));
+                    displayQuotes();
+                    alert("Quote deleted successfully!");
+                }
+            } else {
+                // Do nothing if the user cancels the deletion
+                alert("Deletion canceled.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Save Quotes</h1>
+        <input type="text" id="quoteInput" placeholder="Enter a quote">
+        <button onclick="saveQuote()">Save Quote</button>
+        <h2>Saved Quotes:</h2>
+        <ul id="quoteList"></ul>
+    </div>
+
+    <script>
+        // Display the saved quotes when the page loads
+        displayQuotes();
+    </script>
+</body>
+</html>
